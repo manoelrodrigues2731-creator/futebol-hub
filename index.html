@@ -25,6 +25,7 @@ footer{margin-top:45px;border-top:1px solid var(--line);padding:28px 0;color:#78
 @media(max-width:650px){.nav-actions .google-btn{font-size:0;padding:10px}.nav-actions .google-btn .g{font-size:16px;margin:0}.brand{font-size:18px}}
 
 @media(max-width:850px){.layout{grid-template-columns:1fr}.sidebar{display:none}.newsgrid{grid-template-columns:1fr}}@media(max-width:500px){.hero{padding-top:27px}.hero h1{letter-spacing:-1px}.newsgrid{grid-template-columns:1fr}.status{align-items:flex-start;flex-direction:column}}
+.female-banner{margin:8px 0 18px;padding:20px;border:1px solid #2b6841;border-radius:18px;background:linear-gradient(110deg,#123b23,#0b2115);display:flex;justify-content:space-between;align-items:center;gap:15px;cursor:pointer;box-shadow:0 10px 30px #0003}.female-banner span{font-size:11px;color:var(--green);font-weight:900}.female-banner h2{margin:5px 0;font-size:25px}.female-banner p{margin:0;color:var(--muted)}.female-banner strong{color:var(--green);white-space:nowrap}@media(max-width:600px){.female-banner{align-items:flex-start;flex-direction:column}}
 </style>
 </head>
 <body>
@@ -47,6 +48,7 @@ footer{margin-top:45px;border-top:1px solid var(--line);padding:28px 0;color:#78
 <p>Notícias, futebol feminino, mercado da bola, resultados e destaques. A página tenta atualizar automaticamente e também permite atualização manual.</p>
 </section>
 
+<section class="female-banner" onclick="setCat('Feminino')"><div><span>👩‍🦰 ESPECIAL</span><h2>Futebol Feminino</h2><p>Notícias, campeonatos, seleções e destaques das jogadoras.</p></div><strong>Ver notícias →</strong></section>
 <nav class="tabs" id="tabs"></nav>
 <div class="tools"><input class="search" id="search" placeholder="🔎 Procurar notícia, clube ou jogador..." oninput="render()"></div>
 <div class="status"><span id="status">Preparando notícias...</span><span>Atualização automática: <strong>10h</strong></span></div>
@@ -65,6 +67,16 @@ footer{margin-top:45px;border-top:1px solid var(--line);padding:28px 0;color:#78
 </main>
 
 <script>
+
+const seedNews=[
+{category:"Brasil",icon:"🇧🇷",title:"Brasileirão: principais destaques da rodada",desc:"Confira os assuntos que estão movimentando os clubes brasileiros e os próximos jogos.",source:"Futebol Hub",date:"Agora",link:"https://news.google.com/search?q=futebol+brasileiro&hl=pt-BR&gl=BR&ceid=BR:pt-419",image:"https://images.unsplash.com/photo-1579952363873-27f3bade9f55?auto=format&fit=crop&w=1000&q=80"},
+{category:"Europa",icon:"🌍",title:"Futebol europeu: grandes destaques do dia",desc:"As principais notícias das ligas europeias e seus grandes clubes.",source:"Futebol Hub",date:"Hoje",link:"https://news.google.com/search?q=futebol+Europa&hl=pt-BR&gl=BR&ceid=BR:pt-419",image:"https://images.unsplash.com/photo-1522778119026-d647f0596c20?auto=format&fit=crop&w=1000&q=80"},
+{category:"Mercado",icon:"💰",title:"Mercado da bola: transferências e rumores",desc:"Veja as principais movimentações do mercado do futebol.",source:"Futebol Hub",date:"Hoje",link:"https://news.google.com/search?q=mercado+da+bola&hl=pt-BR&gl=BR&ceid=BR:pt-419",image:"https://images.unsplash.com/photo-1579952363873-27f3bade9f55?auto=format&fit=crop&w=1000&q=80"},
+{category:"Feminino",icon:"👩‍🦰",title:"Futebol feminino: principais notícias e destaques",desc:"Clubes, seleções, campeonatos e as principais jogadoras.",source:"Futebol Hub",date:"Agora",link:"https://news.google.com/search?q=futebol+feminino&hl=pt-BR&gl=BR&ceid=BR:pt-419",image:"https://images.unsplash.com/photo-1553778263-73a83bab9b0c?auto=format&fit=crop&w=1000&q=80"},
+{category:"Feminino",icon:"🏆",title:"Brasileirão Feminino: novidades e destaques",desc:"Acompanhe as equipes e as principais notícias do futebol feminino brasileiro.",source:"Futebol Hub",date:"Hoje",link:"https://news.google.com/search?q=Brasileirao+Feminino&hl=pt-BR&gl=BR&ceid=BR:pt-419",image:"https://images.unsplash.com/photo-1517466787929-bc90951d0974?auto=format&fit=crop&w=1000&q=80"},
+{category:"Feminino",icon:"🌎",title:"Seleções femininas no futebol mundial",desc:"Notícias sobre seleções e grandes competições internacionais.",source:"Futebol Hub",date:"Hoje",link:"https://news.google.com/search?q=sele%C3%A7%C3%A3o+feminina+futebol&hl=pt-BR&gl=BR&ceid=BR:pt-419",image:"https://images.unsplash.com/photo-1518600506278-4e8ef466b810?auto=format&fit=crop&w=1000&q=80"}
+];
+
 const sources=[
 ["Geral","ge futebol últimas notícias","⚽","https://news.google.com/rss/search?q=futebol+Brasil&hl=pt-BR&gl=BR&ceid=BR:pt-419"],
 ["Brasil","futebol brasileiro notícias","🇧🇷","https://news.google.com/rss/search?q=futebol+brasileiro&hl=pt-BR&gl=BR&ceid=BR:pt-419"],
@@ -74,11 +86,11 @@ const sources=[
 ["Feminino","futebol feminino notícias","👩‍🦰","https://news.google.com/rss/search?q=futebol+feminino&hl=pt-BR&gl=BR&ceid=BR:pt-419"]
 ];
 
-let category="Geral", allNews=[], loaded=false;
+let category="Geral", allNews=seedNews.slice(), loaded=true;
 const labels={Geral:"Últimas notícias",Brasil:"Futebol brasileiro",Europa:"Futebol europeu",Champions:"Champions League",Mercado:"Mercado da bola",Feminino:"⚽ Futebol feminino"};
 
 function buildTabs(){
- document.getElementById("tabs").innerHTML=sources.map(s=>`<button class="${s[0]===category?'active':''}" onclick="setCat('${s[0]}')">${s[4]||s[2]} ${s[0]==='Feminino'?'Feminino':s[0]}</button>`).join("");
+ document.getElementById("tabs").innerHTML=sources.map(s=>`<button class="${s[0]===category?'active':''}" onclick="setCat('${s[0]}')">${s[0]==='Feminino'?'👩‍🦰 Futebol Feminino':s[2]+' '+s[0]}</button>`).join("");
  document.getElementById("sideCats").innerHTML=sources.map(s=>`<div class="score" style="cursor:pointer" onclick="setCat('${s[0]}')"><span>${s[2]} ${s[0]}</span><small>›</small></div>`).join("");
 }
 function esc(x){return x.replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
@@ -117,7 +129,7 @@ async function fetchRSS(url,category,icon){
 async function refreshNews(){
  document.getElementById("status").textContent="🔄 Buscando notícias...";
  const results=await Promise.all(sources.map(s=>fetchRSS(s[3],s[0],s[2])));
- allNews=results.flat();
+ allNews=[...results.flat(),...seedNews];
  // remove duplicadas pelo título
  const seen=new Set(); allNews=allNews.filter(n=>{let k=n.title.toLowerCase();if(seen.has(k))return false;seen.add(k);return true});
  allNews.sort((a,b)=>new Date(b.date)-new Date(a.date));
