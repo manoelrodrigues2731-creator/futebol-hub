@@ -26,6 +26,7 @@ footer{margin-top:45px;border-top:1px solid var(--line);padding:28px 0;color:#78
 
 @media(max-width:850px){.layout{grid-template-columns:1fr}.sidebar{display:none}.newsgrid{grid-template-columns:1fr}}@media(max-width:500px){.hero{padding-top:27px}.hero h1{letter-spacing:-1px}.newsgrid{grid-template-columns:1fr}.status{align-items:flex-start;flex-direction:column}}
 .female-banner{margin:8px 0 18px;padding:20px;border:1px solid #2b6841;border-radius:18px;background:linear-gradient(110deg,#123b23,#0b2115);display:flex;justify-content:space-between;align-items:center;gap:15px;cursor:pointer;box-shadow:0 10px 30px #0003}.female-banner span{font-size:11px;color:var(--green);font-weight:900}.female-banner h2{margin:5px 0;font-size:25px}.female-banner p{margin:0;color:var(--muted)}.female-banner strong{color:var(--green);white-space:nowrap}@media(max-width:600px){.female-banner{align-items:flex-start;flex-direction:column}}
+.feature-nav{display:flex;gap:8px;overflow:auto;padding:0 0 18px;scrollbar-width:none}.feature-nav button{white-space:nowrap;border:1px solid var(--line);background:var(--panel2);color:var(--white);padding:10px 13px;border-radius:12px;cursor:pointer;font-weight:800}.feature-nav button:hover{border-color:var(--green);transform:translateY(-1px)}.feature-panel{display:none;margin:0 0 20px;background:rgba(12,27,19,.96);border:1px solid var(--line);border-radius:18px;padding:18px}.feature-panel.active{display:block}.feature-panel h2{margin:0 0 14px}.feature-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.feature-item{background:#0a1710;border:1px solid #173322;border-radius:12px;padding:12px}.feature-item b{display:block;margin-bottom:5px}.live-dot{color:#ff5570;font-weight:900}.fav-on{color:var(--green)}.table{width:100%;border-collapse:collapse;font-size:13px}.table th,.table td{padding:9px 6px;border-bottom:1px solid #173322;text-align:left}.team-btn{cursor:pointer}.market-tag{color:var(--green);font-weight:800}@media(max-width:650px){.feature-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -50,9 +51,68 @@ footer{margin-top:45px;border-top:1px solid var(--line);padding:28px 0;color:#78
 
 <section class="female-banner" onclick="setCat('Feminino')"><div><span>👩‍🦰 ESPECIAL</span><h2>Futebol Feminino</h2><p>Notícias, campeonatos, seleções e destaques das jogadoras.</p></div><strong>Ver notícias →</strong></section>
 <nav class="tabs" id="tabs"></nav>
+<div class="feature-nav">
+<button onclick="showFeature('live')">🔴 Ao vivo</button>
+<button onclick="showFeature('table')">📊 Tabelas</button>
+<button onclick="showFeature('teams')">👕 Times</button>
+<button onclick="showFeature('favorites')">🔔 Favoritos</button>
+<button onclick="showFeature('market')">💰 Mercado da bola</button>
+</div>
 <div class="tools"><input class="search" id="search" placeholder="🔎 Procurar notícia, clube ou jogador..." oninput="render()"></div>
 <div class="status"><span id="status">Preparando notícias...</span><span>Atualização automática: <strong>10h</strong></span></div>
 
+
+<div id="feature-live" class="feature-panel">
+<h2>🔴 Jogos ao vivo</h2>
+<div class="feature-grid">
+<div class="feature-item"><b><span class="live-dot">● AO VIVO</span> Flamengo x Palmeiras</b><span>2º tempo · 67'</span></div>
+<div class="feature-item"><b><span class="live-dot">● AO VIVO</span> Barcelona x Real Madrid</b><span>1º tempo · 34'</span></div>
+<div class="feature-item"><b>⏰ Próximo</b><span>Manchester City x Liverpool · 16:00</span></div>
+<div class="feature-item"><b>⏰ Próximo</b><span>Corinthians x Santos · 18:30</span></div>
+</div></div>
+
+<div id="feature-table" class="feature-panel">
+<h2>📊 Tabela atualizável por resultados</h2>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+<button onclick="renderStandings()">🔄 Atualizar tabela</button>
+<button onclick="showFeature('results')">⚽ Ver resultados</button>
+</div>
+<div id="standingsBox"></div>
+<p style="color:var(--muted);font-size:12px">A classificação é recalculada automaticamente a partir dos resultados cadastrados. Quando um jogo termina, o resultado precisa entrar na base de resultados para os pontos serem recalculados.</p>
+</div>
+
+<div id="feature-results" class="feature-panel">
+<h2>⚽ Resultados</h2>
+<div class="feature-grid">
+<div class="feature-item"><b>Flamengo 2 × 1 Palmeiras</b><span>Finalizado</span></div>
+<div class="feature-item"><b>Botafogo 1 × 1 Fluminense</b><span>Finalizado</span></div>
+<div class="feature-item"><b>Corinthians 0 × 2 São Paulo</b><span>Finalizado</span></div>
+<div class="feature-item"><b>Palmeiras × Botafogo</b><span>Próximo jogo</span></div>
+</div>
+</div>
+
+<div id="feature-teams" class="feature-panel"> class="feature-panel">
+<h2>👕 Times</h2>
+<div class="feature-grid">
+<div class="feature-item team-btn" onclick="favoriteTeam('Flamengo')"><b>🔴 Flamengo</b><span>Adicionar aos favoritos</span></div>
+<div class="feature-item team-btn" onclick="favoriteTeam('Palmeiras')"><b>🟢 Palmeiras</b><span>Adicionar aos favoritos</span></div>
+<div class="feature-item team-btn" onclick="favoriteTeam('Corinthians')"><b>⚫ Corinthians</b><span>Adicionar aos favoritos</span></div>
+<div class="feature-item team-btn" onclick="favoriteTeam('São Paulo')"><b>🔴 São Paulo</b><span>Adicionar aos favoritos</span></div>
+</div></div>
+
+<div id="feature-favorites" class="feature-panel">
+<h2>🔔 Favoritos</h2><div id="favoriteList"><p style="color:var(--muted)">Você ainda não escolheu nenhum time.</p></div>
+</div>
+
+<div id="feature-market" class="feature-panel">
+<h2>💰 Mercado da bola</h2>
+<div class="feature-grid">
+<div class="feature-item"><b>🔄 Transferências</b><span class="market-tag">Últimas movimentações</span><p>Contratações, saídas e negociações dos principais clubes.</p></div>
+<div class="feature-item"><b>👀 Rumores</b><span class="market-tag">Em alta</span><p>Confira os rumores que estão movimentando o mercado.</p></div>
+<div class="feature-item"><b>💵 Valores</b><span class="market-tag">Negociações</span><p>Acompanhe os valores divulgados nas principais negociações.</p></div>
+<div class="feature-item"><b>📝 Confirmadas</b><span class="market-tag">Oficial</span><p>Transferências já anunciadas pelos clubes.</p></div>
+</div>
+</div>
 <div class="layout">
 <section>
 <div class="section-title"><h2 id="sectionTitle">Últimas notícias</h2><span class="pill" id="count">0</span></div>
@@ -113,6 +173,53 @@ function googleLogin(){
 
 function setCat(c){category=c;buildTabs();render();window.scrollTo({top:250,behavior:"smooth"})}
 
+
+
+const standingsTeams=["Flamengo","Palmeiras","Botafogo","Fluminense","Corinthians","São Paulo"];
+const completedResults=[
+  ["Flamengo","Palmeiras",2,1],
+  ["Botafogo","Fluminense",1,1],
+  ["Corinthians","São Paulo",0,2]
+];
+function calculateStandings(){
+  const t={}; standingsTeams.forEach(x=>t[x]={team:x,p:0,j:0,w:0,d:0,l:0,gf:0,ga:0,gd:0});
+  completedResults.forEach(([h,a,gh,ga])=>{
+    if(!t[h])t[h]={team:h,p:0,j:0,w:0,d:0,l:0,gf:0,ga:0,gd:0};
+    if(!t[a])t[a]={team:a,p:0,j:0,w:0,d:0,l:0,gf:0,ga:0,gd:0};
+    t[h].j++;t[a].j++;t[h].gf+=gh;t[h].ga+=ga;t[a].gf+=ga;t[a].ga+=gh;
+    if(gh>ga){t[h].w++;t[h].p+=3;t[a].l++}
+    else if(gh<ga){t[a].w++;t[a].p+=3;t[h].l++}
+    else{t[h].d++;t[a].d++;t[h].p++;t[a].p++}
+  });
+  return Object.values(t).map(x=>({...x,gd:x.gf-x.ga})).sort((a,b)=>b.p-a.p||b.gd-a.gd||b.gf-a.gf);
+}
+function renderStandings(){
+  const box=document.getElementById("standingsBox"); if(!box)return;
+  const rows=calculateStandings();
+  box.innerHTML=`<table class="table"><thead><tr><th>#</th><th>Time</th><th>PTS</th><th>J</th><th>V</th><th>E</th><th>D</th><th>SG</th></tr></thead><tbody>${
+    rows.map((x,i)=>`<tr><td>${i+1}</td><td><b>${esc(x.team)}</b></td><td><b>${x.p}</b></td><td>${x.j}</td><td>${x.w}</td><td>${x.d}</td><td>${x.l}</td><td>${x.gd>0?"+":""}${x.gd}</td></tr>`).join("")
+  }</tbody></table>`;
+}
+
+function showFeature(name){
+  document.querySelectorAll(".feature-panel").forEach(x=>x.classList.remove("active"));
+  const el=document.getElementById("feature-"+name);
+  if(el){el.classList.add("active");el.scrollIntoView({behavior:"smooth",block:"start"});}
+  if(name==="favorites") renderFavorites();
+}
+function getFavorites(){try{return JSON.parse(localStorage.getItem("futebolHubFavorites")||"[]")}catch(e){return[]}}
+function favoriteTeam(team){
+  let f=getFavorites();
+  if(f.includes(team)) f=f.filter(x=>x!==team); else f.push(team);
+  localStorage.setItem("futebolHubFavorites",JSON.stringify(f));
+  renderFavorites();
+}
+function renderFavorites(){
+  const el=document.getElementById("favoriteList"); if(!el)return;
+  const f=getFavorites();
+  el.innerHTML=f.length?f.map(t=>`<div class="feature-item" style="margin-bottom:8px"><b class="fav-on">⭐ ${esc(t)}</b><button onclick="favoriteTeam('${t.replace(/'/g,"\\'")}')">Remover</button></div>`).join(""):"<p style='color:var(--muted)'>Você ainda não escolheu nenhum time.</p>";
+}
+
 async function fetchRSS(url,category,icon){
  // rss2json funciona como ponte para permitir que um site estático leia RSS no navegador.
  const api="https://api.rss2json.com/v1/api.json?rss_url="+encodeURIComponent(url);
@@ -138,7 +245,7 @@ async function refreshNews(){
  document.getElementById("status").innerHTML=`Última busca: <strong>${now.toLocaleString("pt-BR")}</strong> · Próxima automática: <strong>${next.toLocaleString("pt-BR")}</strong>`;
  render();
 }
-buildTabs();render();refreshNews();
+buildTabs();render();renderStandings();refreshNews();
 setInterval(refreshNews,10*60*60*1000);
 </script>
 </body>
